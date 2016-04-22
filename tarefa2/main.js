@@ -83,17 +83,7 @@ $.get('genres.csv', function(csv) {
             csv: csv
         },
         title: {
-            text: 'Rotten Tomatoes Score'
-        },
-        yAxis: {
-            title: {
-                text: 'Score'
-            }
-        },
-        xAxis: {
-            title: {
-                text: 'Movies with more than 1 oscar'
-            }
+            text: 'Genre diversity'
         }
 
     });
