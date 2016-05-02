@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Vinculando um vetor como dados</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+</head>
+
+<body>
+<div id="chart1">
+    <h1>
+        1. Worldwide gross
+    </h1>
+</div>
+
+<div id="chart2">
+    <h1>
+        2. Profit (Worldwide gross - Budget)
+    </h1>
+</div>
+
+<script type="text/javascript">
+
+    var comparePorBilheteria = function (a, b) {
+        return a.Worldwide_Gross_M > b.Worldwide_Gross_M?-1:1;
+    };
+
+    var comparePorLucro = function (a, b){
+        return (a.Worldwide_Gross_M - a.Budget_M) > (b.Worldwide_Gross_M - b.Budget_M)?-1:1;
+    }
+
+    function render(id, attr1, attr2, color, data, comparator) {
+        d3.select("#"+id).selectAll("."+id)
+                .data(data)
+            .enter().append("div")
+            .attr("class", "h-bar " + id)
+            .append("span");
+
+        d3.select("#"+id).selectAll("."+id)
+                .data(data)
+            .exit().remove();
+
+        d3.select("#"+id).selectAll("."+id)
+                .data(data)
+                .attr("class", "h-bar " + id)
+            .style("width", function (d) {
+                if(attr2 === "")
+                  return (d[attr1] * 0.3) + "px";
+                else
+                  return ((d[attr1] - d[attr2] ) * 0.3) + "px";
+            })
+            .style("background-color", color)
+
+            .select("span")
+                .text(function (d) {
+                    return d.Film;
+                });
+         if(comparator)
+            d3.select("body")
+                .selectAll("." + id)
+                .sort(comparator);
+    }
+
+
+
+    d3.json("movies.json", function(error, json){
+        render("chart1", "Worldwide_Gross_M", "", "steelblue", json, comparePorBilheteria);
+        render("chart2", "Worldwide_Gross_M", "Budget_M", "Brown", json, comparePorLucro);
+    });
+</script>
+</body>
+</html>
