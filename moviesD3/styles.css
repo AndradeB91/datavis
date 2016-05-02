@@ -1,5 +1,7 @@
 body {
-    font-family: "helvetica"
+    font-family: "helvetica neue";
+    color: #666;
+    padding: 0 20%;
 }
 .box {
     width: 200px;
