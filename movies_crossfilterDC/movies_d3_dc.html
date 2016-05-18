@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Carregando dados de um arquivo csv</title>
+    <link rel="stylesheet" href="css/dc.css">
+    <script src="js/crossfilter.js" charset="utf-8"></script>
+    <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="js/dc.js" charset="utf-8"></script>
+
+</head>
+<body>
+    <div id="chart1"><span> Total apurado por ano </span></div>
+    <div id="chart2"><span> Total apurado por gênero </span></div>
+
+	  <script type="text/javascript">
+        var barChart1 = dc.barChart('#chart1');
+        var barChart2 = dc.barChart('#chart2');
+
+        d3.json("movies.json", function(data){
+            data.forEach(function(d){
+                d.Year = +d.Year;
+                d.Worldwide_Gross_M = +d.Worldwide_Gross_M;
+                d.Genre = d.Genre;
+            });
+
+            var facts = crossfilter(data);
+
+            var yearDim = facts.dimension(function(d){
+                return d.Year;
+            });
+
+            var yearGroupDim = yearDim.group().reduceSum(function(d){
+                return d.Worldwide_Gross_M;
+            });
+
+            var genreDim = facts.dimension(function(d){
+                return d.Genre;
+            });
+
+            var genreGroupDim = genreDim.group().reduceSum(function(d){
+                return d.Worldwide_Gross_M;
+            });
+
+            barChart1.width(800)
+                     .height(400)
+                     .margins({top: 20, right: 100, bottom: 20, left: 70})
+                     .dimension(yearDim)
+                     .x(d3.scale.linear().domain([2005,2013]))
+                     .yAxisLabel("Worldwide gross M")
+                     .renderHorizontalGridLines(true)
+                     .brushOn(true)
+                     .centerBar(true)
+                     .gap(35)
+                     .group(yearGroupDim, 'Year');
+
+
+             barChart2.width(800)
+                      .height(400)
+                      .margins({top: 20, right: 100, bottom: 20, left: 70})
+                      .dimension(genreDim)
+                      .x(d3.scale.ordinal().domain(data.map(function (d) {return d.Genre; })))
+                      .xUnits(dc.units.ordinal)
+                      .yAxisLabel("Worldwide gross M")
+                      .renderHorizontalGridLines(true)
+                      .brushOn(true)
+                      .centerBar(false)
+                      .gap(35)
+                      .group(genreGroupDim, 'Year');
+
+            dc.renderAll();
+        });
+	</script>
+</body>
+</html>
