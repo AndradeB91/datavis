@@ -97,14 +97,14 @@ function ready(error, us) {
       .attr("d", path)
       .on("click",function(d){console.log(d.id)})
       .on("mouseover", function(d){
-                d3.select(this) // seleciona o elemento atual
-                  .style("cursor", "pointer") //muda o mouse para mãozinha
+                d3.select(this) 
+                  .style("cursor", "pointer")
                   .attr("stroke-width", 3)
                   .attr("stroke","#fff")
                   var coordinates = [0, 0];
-                  coordinates = d3.mouse(this); // obtém a posição do mouse relativa a this
+                  coordinates = d3.mouse(this);
                   var x = coordinates[0] + 10;
-                  var y = coordinates[1] + 20; //descontando a posição do svg
+                  var y = coordinates[1] + 20; 
                   showTooltip(d.id, x, y);
                 })
       .on("mouseout", function(d){
